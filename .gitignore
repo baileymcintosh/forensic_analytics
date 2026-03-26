@@ -1,0 +1,14 @@
+# SAS data files - too large for GitHub
+*.sas7bdat
+*.sas7bcat
+
+# Extracted data folders
+SASData*/
+data/
+
+# Zip archives
+*.zip
+
+# SAS work files
+*.log
+*.lst
