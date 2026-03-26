@@ -1,0 +1,14 @@
+{
+  "SAS.connectionProfiles": {
+    "activeProfile": "Penn ODA",
+    "profiles": {
+      "Penn ODA": {
+        "connectionType": "iom",
+        "host": "odamid-usw2-2.oda.sas.com",
+        "port": 8591,
+        "username": "YOUR_ODA_USERNAME",
+        "sasOptions": []
+      }
+    }
+  }
+}
