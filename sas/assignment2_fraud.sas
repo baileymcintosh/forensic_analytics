@@ -13,8 +13,15 @@
   home directory under a subfolder called SASData.
 ===========================================================================*/
 
+/* Amazon WorkSpaces (AWS) — use these libnames */
+libname mydata "s:\sasdata";
+libname home   "d:\users\mcbai\desktop\programs";
+
+/* ODA alternative — swap in if running on SAS OnDemand instead:
 libname mydata "/home/u64486450/SASData";
 libname home   "/home/u64486450/";
+*/
+
 options ps=max ls=max nocenter;
 
 
