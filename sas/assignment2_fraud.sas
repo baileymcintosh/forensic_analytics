@@ -64,7 +64,8 @@ data variables;
     ACCRUAL = (IB - OANCF) / AT;               /* Accruals (also used in F)   */
     LEV     = (LCT + DLTT) / AT;               /* Leverage                    */
 
-    /* Return on assets (additional predictor — computed here, used in regression) */
+    /* Return on assets — computed but excluded from regression due to
+       near-perfect collinearity with ACCRUAL (both contain IB/AT, r=0.905) */
     ROA = IB / AT;
 run;
 
@@ -181,8 +182,7 @@ data Fraud;
     set addAAER;
     if 2003 <= fyear <= 2014;
     if nmiss(mflag, fflag) = 0;
-    /* Require non-missing additional variables */
-    if nmiss(accrual, asset_growth, sales_growth, roa, lev) = 0;
+    if nmiss(accrual, asset_growth, lev) = 0;
     if not missing(P_aaer) then FRAUD = 1; else FRAUD = 0;
 run;
 
@@ -193,7 +193,7 @@ run;
 
 /* Overall means for all model variables */
 proc means data=fraud n mean std p25 p50 p75 maxdec=3;
-    var fraud mflag fflag accrual asset_growth sales_growth roa lev;
+    var fraud mflag fflag accrual asset_growth lev;
 quit;
 
 /* Observations per year */
@@ -209,19 +209,29 @@ run;
 
 /* Correlations among predictors */
 proc corr data=fraud;
-    var mflag fflag accrual asset_growth sales_growth roa lev;
+    var mflag fflag accrual asset_growth lev;
 quit;
 
 
 /*===========================================================================
   STEP 5: PART I - ALL-YEARS REGRESSION (2003-2014 pooled)
 
-  Model: FRAUD = a + b1*MFLAG + b2*FFLAG + b3*ACCRUAL + b4*ASSET_GROWTH
-                   + b5*SALES_GROWTH + b6*ROA + b7*LEV + e
+  Model: FRAUD = a + b1*MFLAG + b2*FFLAG + b3*ACCRUAL
+                   + b4*ASSET_GROWTH + b5*LEV + e
+
+  Variable predictions:
+    MFLAG        (+): M-score flags firms with distorted financials
+    FFLAG        (+): F-score flags firms with high fraud probability
+    ACCRUAL      (+): High accruals signal earnings manipulation
+    ASSET_GROWTH (+): Aggressive expansion may be funded by manipulation
+    LEV          (+): Debt pressure creates incentive to appear healthier
+
+  Note: ROA dropped due to near-perfect collinearity with ACCRUAL (r=0.905)
+  Note: SALES_GROWTH dropped due to extreme outliers (max=11,880, std=61)
 ===========================================================================*/
 
 proc reg data=fraud;
-    model fraud = mflag fflag accrual asset_growth sales_growth roa lev;
+    model fraud = mflag fflag accrual asset_growth lev;
     title 'Assignment 2 Part I: Pooled Fraud Regression (2003-2014)';
 quit;
 
@@ -239,6 +249,6 @@ run;
 
 proc reg data=fraud;
     by fyear;
-    model fraud = mflag fflag accrual asset_growth sales_growth roa lev;
+    model fraud = mflag fflag accrual asset_growth lev;
     title 'Assignment 2 Part II: Year-by-Year Fraud Regressions';
 quit;

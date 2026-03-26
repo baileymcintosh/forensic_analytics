@@ -1,0 +1,733 @@
+Engine               V9                            Indexes               0
+Created              01/23/2021 17:21:21           Observation Length    168
+Last Modified        01/23/2021 17:21:21           Deleted Observations  0
+Protection                                         Compressed            NO
+Data Set Type                                      Sorted                YES
+Label
+Data Representation  WINDOWS_64
+Encoding             wlatin1  Western (Windows)
+
+
+              Engine/Host Dependent Information
+
+Data Set Page Size          65536
+Number of Data Set Pages    4
+First Data Page             1
+Max Obs per Page            389
+Obs in First Data Page      380
+Number of Data Set Repairs  0
+ExtendObsCounter            YES
+Filename                    s:\sasdata\aaer1982to2014.sas7bdat
+Release Created             9.0401M4
+Host Created                X64_10PRO
+Owner Name                  KITE\dtayl
+File Size                   320KB
+File Size (bytes)           327680
+
+
+                Alphabetic List of Variables and Attributes
+
+#    Variable    Type    Len    Format       Informat    Label
+
+3    CONAME      Char    118    $118.        $118.       CONAME
+4    P_AAER      Num       8    BEST.                    P_AAER
+2    datadate    Num       8    YYMMDDN8.                Data Date
+5    fyear       Num       8
+1    gvkey       Char     24    $6.          $24.        Global Company Key
+
+
+             Sort Information
+
+Sortedby       gvkey datadate CONAME P_AAER
+Validated      YES
+Character Set  ANSI
+
+The SAS System
+
+The FREQ Procedure
+
+                                  Cumulative    Cumulative
+fyear    Frequency     Percent     Frequency      Percent
+ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+ 1983          19        1.27            19         1.27
+ 1984          20        1.34            39         2.61
+ 1985          16        1.07            55         3.68
+ 1986          25        1.67            80         5.35
+ 1987          17        1.14            97         6.49
+ 1988          22        1.47           119         7.97
+ 1989          33        2.21           152        10.17
+ 1990          26        1.74           178        11.91
+ 1991          38        2.54           216        14.46
+ 1992          38        2.54           254        17.00
+ 1993          42        2.81           296        19.81
+ 1994          32        2.14           328        21.95
+ 1995          38        2.54           366        24.50
+ 1996          43        2.88           409        27.38
+ 1997          60        4.02           469        31.39
+ 1998          74        4.95           543        36.35
+ 1999         106        7.10           649        43.44
+ 2000         129        8.63           778        52.07
+ 2001         128        8.57           906        60.64
+ 2002         111        7.43          1017        68.07
+ 2003          94        6.29          1111        74.36
+ 2004          72        4.82          1183        79.18
+ 2005          59        3.95          1242        83.13
+ 2006          38        2.54          1280        85.68
+ 2007          36        2.41          1316        88.09
+ 2008          29        1.94          1345        90.03
+ 2009          33        2.21          1378        92.24
+ 2010          30        2.01          1408        94.24
+ 2011          25        1.67          1433        95.92
+ 2012          30        2.01          1463        97.93
+ 2013          21        1.41          1484        99.33
+ 2014          10        0.67          1494       100.00
+
+The SAS System
+
+The MEANS Procedure
+
+Variable            N            Mean         Std Dev       25th Pctl       50th Pctl       75th Pctl
+ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+FRAUD           41959           0.007           0.085           0.000           0.000           0.000
+MFLAG           41959           0.121           0.326           0.000           0.000           0.000
+FFLAG           41959           0.348           0.476           0.000           0.000           1.000
+ACCRUAL         41959          -0.079           0.508          -0.099          -0.053          -0.019
+ASSET_GROWTH    41959           0.126           0.646          -0.039           0.051           0.166
+SALES_GROWTH    41959           0.636          61.009          -0.027           0.075           0.200
+ROA             41959          -0.033           0.610          -0.028           0.034           0.075
+LEV             41959           0.417           0.405           0.240           0.388           0.539
+ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+
+The SAS System
+
+The FREQ Procedure
+
+                        Fiscal Year
+
+                                  Cumulative    Cumulative
+fyear    Frequency     Percent     Frequency      Percent
+ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+ 2003        4152        9.90          4152         9.90
+ 2004        3996        9.52          8148        19.42
+ 2005        3803        9.06         11951        28.48
+ 2006        3721        8.87         15672        37.35
+ 2007        3529        8.41         19201        45.76
+ 2008        3448        8.22         22649        53.98
+ 2009        3449        8.22         26098        62.20
+ 2010        3297        7.86         29395        70.06
+ 2011        3178        7.57         32573        77.63
+ 2012        3166        7.55         35739        85.18
+ 2013        3131        7.46         38870        92.64
+ 2014        3089        7.36         41959       100.00
+
+The SAS System
+
+The MEANS Procedure
+
+   Analysis Variable : FRAUD
+
+Fiscal
+  Year    N Obs            Mean
+ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+  2003     4152          0.0157
+
+  2004     3996          0.0123
+
+  2005     3803          0.0110
+
+  2006     3721          0.0067
+
+  2007     3529          0.0057
+
+  2008     3448          0.0044
+
+  2009     3449          0.0055
+
+  2010     3297          0.0058
+
+  2011     3178          0.0047
+
+  2012     3166          0.0057
+
+  2013     3131          0.0032
+
+  2014     3089          0.0016
+ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ
+
+The SAS System
+
+The CORR Procedure
+
+   7  Variables:    MFLAG        FFLAG        ACCRUAL      ASSET_GROWTH SALES_GROWTH ROA          LEV
+
+
+                                      Simple Statistics
+
+Variable               N          Mean       Std Dev           Sum       Minimum       Maximum
+
+MFLAG              41959       0.12052       0.32558          5057             0       1.00000
+FFLAG              41959       0.34803       0.47635         14603             0       1.00000
+ACCRUAL            41959      -0.07858       0.50783         -3297     -91.71529       7.44415
+ASSET_GROWTH       41959       0.12580       0.64593          5279      -0.97418      57.13322
+SALES_GROWTH       41959       0.63567      61.00853         26672      -0.99970         11880
+ROA                41959      -0.03349       0.60982         -1405    -100.01400       1.87810
+LEV                41959       0.41722       0.40516         17506             0      62.72112
+
+
+                                 Pearson Correlation Coefficients, N = 41959
+                                          Prob > |r| under H0: Rho=0
+
+                                                              ASSET_        SALES_
+                     MFLAG         FFLAG       ACCRUAL        GROWTH        GROWTH           ROA           LEV
+
+MFLAG              1.00000       0.04995       0.06312       0.20914       0.00770      -0.01568      -0.02836
+                                  <.0001        <.0001        <.0001        0.1149        0.0013        <.0001
+
+FFLAG              0.04995       1.00000       0.03607       0.06163       0.00118       0.01935       0.06002
+                    <.0001                      <.0001        <.0001        0.8097        <.0001        <.0001
+
+ACCRUAL            0.06312       0.03607       1.00000       0.04215      -0.00624       0.90465      -0.71264
+                    <.0001        <.0001                      <.0001        0.2015        <.0001        <.0001
+
+ASSET_GROWTH       0.20914       0.06163       0.04215       1.00000       0.04587       0.06245      -0.03998
+                    <.0001        <.0001        <.0001                      <.0001        <.0001        <.0001
+
+SALES_GROWTH       0.00770       0.00118      -0.00624       0.04587       1.00000       0.00234       0.00612
+                    0.1149        0.8097        0.2015        <.0001                      0.6311        0.2100
+
+ROA               -0.01568       0.01935       0.90465       0.06245       0.00234       1.00000      -0.69763
+                    0.0013        <.0001        <.0001        <.0001        0.6311                      <.0001
+
+LEV               -0.02836       0.06002      -0.71264      -0.03998       0.00612      -0.69763       1.00000
+                    <.0001        <.0001        <.0001        <.0001        0.2100        <.0001
+
+Assignment 2 Part I: Pooled Fraud Regression (2003-2014)
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read       41959
+Number of Observations Used       41959
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.55006        0.07858      11.01    <.0001
+Error                 41951      299.27630        0.00713
+Corrected Total       41958      299.82635
+
+
+Root MSE              0.08446    R-Square     0.0018
+Dependent Mean        0.00720    Adj R-Sq     0.0017
+Coeff Var          1173.50026
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1        0.00507     0.00076544       6.63      <.0001
+MFLAG            1     0.00058930        0.00132       0.45      0.6556
+FFLAG            1        0.00728     0.00087495       8.32      <.0001
+ACCRUAL          1       -0.00275        0.00202      -1.36      0.1737
+ASSET_GROWTH     1     0.00098291     0.00065774       1.49      0.1351
+SALES_GROWTH     1    -0.00000153     0.00000677      -0.23      0.8212
+ROA              1        0.00205        0.00164       1.25      0.2112
+LEV              1       -0.00179        0.00148      -1.21      0.2272
+
+Assignment 2 Part II: Year-by-Year Fraud Regressions
+
+Fiscal Year=2003
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read        4152
+Number of Observations Used        4152
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.40142        0.05735       3.74    0.0005
+Error                  4144       63.58100        0.01534
+Corrected Total        4151       63.98242
+
+
+Root MSE              0.12387    R-Square     0.0063
+Dependent Mean        0.01566    Adj R-Sq     0.0046
+Coeff Var           791.22096
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1        0.01236        0.00378       3.27      0.0011
+MFLAG            1       -0.00581        0.00617      -0.94      0.3461
+FFLAG            1        0.02099        0.00427       4.91      <.0001
+ACCRUAL          1        0.00259        0.01564       0.17      0.8682
+ASSET_GROWTH     1     0.00075049        0.00240       0.31      0.7547
+SALES_GROWTH     1    -0.00006822     0.00023169      -0.29      0.7684
+ROA              1    -0.00021576        0.00935      -0.02      0.9816
+LEV              1       -0.00536        0.00699      -0.77      0.4430
+
+Assignment 2 Part II: Year-by-Year Fraud Regressions
+
+Fiscal Year=2004
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read        3996
+Number of Observations Used        3996
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.14139        0.02020       1.67    0.1118
+Error                  3988       48.25776        0.01210
+Corrected Total        3995       48.39915
+
+
+Root MSE              0.11000    R-Square     0.0029
+Dependent Mean        0.01226    Adj R-Sq     0.0012
+Coeff Var           897.08874
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1        0.01066        0.00367       2.90      0.0037
+MFLAG            1     0.00019475        0.00536       0.04      0.9710
+FFLAG            1        0.01093        0.00366       2.99      0.0028
+ACCRUAL          1       -0.00522        0.01176      -0.44      0.6571
+ASSET_GROWTH     1     0.00062610        0.00330       0.19      0.8496
+SALES_GROWTH     1    -0.00011935     0.00094562      -0.13      0.8996
+ROA              1        0.00814        0.00832       0.98      0.3285
+LEV              1       -0.00650        0.00680      -0.96      0.3395
+
+Assignment 2 Part II: Year-by-Year Fraud Regressions
+
+Fiscal Year=2005
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read        3803
+Number of Observations Used        3803
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.19275        0.02754       2.53    0.0136
+Error                  3795       41.34341        0.01089
+Corrected Total        3802       41.53616
+
+
+Root MSE              0.10438    R-Square     0.0046
+Dependent Mean        0.01104    Adj R-Sq     0.0028
+Coeff Var           945.09245
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1        0.01111        0.00370       3.01      0.0027
+MFLAG            1     0.00090181        0.00537       0.17      0.8667
+FFLAG            1        0.01008        0.00356       2.83      0.0047
+ACCRUAL          1       -0.00511        0.01490      -0.34      0.7315
+ASSET_GROWTH     1        0.00751        0.00389       1.93      0.0534
+SALES_GROWTH     1    -0.00000431     0.00002824      -0.15      0.8787
+ROA              1        0.00434        0.00853       0.51      0.6109
+LEV              1       -0.01314        0.00709      -1.85      0.0639
+
+Assignment 2 Part II: Year-by-Year Fraud Regressions
+
+Fiscal Year=2006
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read        3721
+Number of Observations Used        3721
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.10980        0.01569       2.36    0.0212
+Error                  3713       24.72224        0.00666
+Corrected Total        3720       24.83203
+
+
+Root MSE              0.08160    R-Square     0.0044
+Dependent Mean        0.00672    Adj R-Sq     0.0025
+Coeff Var          1214.50992
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1        0.00486        0.00291       1.67      0.0950
+MFLAG            1        0.00124        0.00417       0.30      0.7665
+FFLAG            1        0.00896        0.00276       3.24      0.0012
+ACCRUAL          1       -0.00453        0.00737      -0.61      0.5389
+ASSET_GROWTH     1        0.00485        0.00319       1.52      0.1292
+SALES_GROWTH     1    -0.00031909     0.00084661      -0.38      0.7063
+ROA              1        0.00389        0.00581       0.67      0.5030
+LEV              1       -0.00698        0.00557      -1.25      0.2106
+
+Assignment 2 Part II: Year-by-Year Fraud Regressions
+
+Fiscal Year=2007
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read        3529
+Number of Observations Used        3529
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.03920        0.00560       0.99    0.4338
+Error                  3521       19.84745        0.00564
+Corrected Total        3528       19.88665
+
+
+Root MSE              0.07508    R-Square     0.0020
+Dependent Mean        0.00567    Adj R-Sq    -0.0000
+Coeff Var          1324.77162
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1        0.00605        0.00279       2.17      0.0304
+MFLAG            1     0.00009004        0.00398       0.02      0.9819
+FFLAG            1        0.00486        0.00263       1.85      0.0646
+ACCRUAL          1     0.00020322        0.01125       0.02      0.9856
+ASSET_GROWTH     1     0.00011055        0.00181       0.06      0.9512
+SALES_GROWTH     1    -3.07072E-7     0.00000642      -0.05      0.9619
+ROA              1        0.00582        0.00602       0.97      0.3337
+LEV              1       -0.00523        0.00507      -1.03      0.3028
+
+Assignment 2 Part II: Year-by-Year Fraud Regressions
+
+Fiscal Year=2008
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read        3448
+Number of Observations Used        3448
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.01783        0.00255       0.59    0.7666
+Error                  3440       14.91691        0.00434
+Corrected Total        3447       14.93474
+
+
+Root MSE              0.06585    R-Square     0.0012
+Dependent Mean        0.00435    Adj R-Sq    -0.0008
+Coeff Var          1513.68747
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1        0.00625        0.00221       2.83      0.0046
+MFLAG            1     0.00077363        0.00380       0.20      0.8388
+FFLAG            1        0.00132        0.00241       0.55      0.5827
+ACCRUAL          1        0.00256        0.00449       0.57      0.5687
+ASSET_GROWTH     1     0.00070087        0.00270       0.26      0.7955
+SALES_GROWTH     1     0.00001211     0.00057206       0.02      0.9831
+ROA              1        0.00162        0.00242       0.67      0.5026
+LEV              1       -0.00451        0.00395      -1.14      0.2534
+
+Assignment 2 Part II: Year-by-Year Fraud Regressions
+
+Fiscal Year=2009
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read        3449
+Number of Observations Used        3449
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.00575     0.00082148       0.15    0.9940
+Error                  3441       18.88958        0.00549
+Corrected Total        3448       18.89533
+
+
+Root MSE              0.07409    R-Square     0.0003
+Dependent Mean        0.00551    Adj R-Sq    -0.0017
+Coeff Var          1344.95708
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1        0.00425        0.00264       1.61      0.1071
+MFLAG            1     0.00096963        0.00445       0.22      0.8275
+FFLAG            1        0.00255        0.00301       0.85      0.3977
+ACCRUAL          1       -0.00326        0.01053      -0.31      0.7565
+ASSET_GROWTH     1     0.00054064        0.00142       0.38      0.7039
+SALES_GROWTH     1    -0.00010502     0.00028977      -0.36      0.7171
+ROA              1        0.00177        0.00580       0.31      0.7602
+LEV              1     0.00072709        0.00496       0.15      0.8836
+
+Assignment 2 Part II: Year-by-Year Fraud Regressions
+
+Fiscal Year=2010
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read        3297
+Number of Observations Used        3297
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.00640     0.00091454       0.16    0.9927
+Error                  3289       18.88410        0.00574
+Corrected Total        3296       18.89051
+
+
+Root MSE              0.07577    R-Square     0.0003
+Dependent Mean        0.00576    Adj R-Sq    -0.0018
+Coeff Var          1314.86635
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1        0.00469        0.00235       1.99      0.0462
+MFLAG            1     0.00072437        0.00409       0.18      0.8595
+FFLAG            1        0.00172        0.00280       0.62      0.5375
+ACCRUAL          1        0.00421        0.00875       0.48      0.6304
+ASSET_GROWTH     1     0.00092559        0.00173       0.54      0.5920
+SALES_GROWTH     1    -0.00002300     0.00011809      -0.19      0.8456
+ROA              1       -0.00292        0.00742      -0.39      0.6939
+LEV              1        0.00133        0.00463       0.29      0.7745
+
+Assignment 2 Part II: Year-by-Year Fraud Regressions
+
+Fiscal Year=2011
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read        3178
+Number of Observations Used        3178
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.04013        0.00573       1.22    0.2874
+Error                  3170       14.88907        0.00470
+Corrected Total        3177       14.92920
+
+
+Root MSE              0.06853    R-Square     0.0027
+Dependent Mean        0.00472    Adj R-Sq     0.0005
+Coeff Var          1452.00052
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1        0.00170        0.00265       0.64      0.5207
+MFLAG            1       -0.00580        0.00418      -1.39      0.1655
+FFLAG            1        0.00546        0.00257       2.13      0.0336
+ACCRUAL          1        0.00498        0.01005       0.50      0.6205
+ASSET_GROWTH     1     0.00009216        0.00318       0.03      0.9769
+SALES_GROWTH     1    -0.00001674     0.00036902      -0.05      0.9638
+ROA              1       -0.00180        0.00605      -0.30      0.7658
+LEV              1        0.00469        0.00517       0.91      0.3642
+
+Assignment 2 Part II: Year-by-Year Fraud Regressions
+
+Fiscal Year=2012
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read        3166
+Number of Observations Used        3166
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.09960        0.01423       2.52    0.0137
+Error                  3158       17.79806        0.00564
+Corrected Total        3165       17.89766
+
+
+Root MSE              0.07507    R-Square     0.0056
+Dependent Mean        0.00569    Adj R-Sq     0.0034
+Coeff Var          1320.44006
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1     0.00086160        0.00290       0.30      0.7667
+MFLAG            1       -0.00261        0.00479      -0.54      0.5864
+FFLAG            1        0.00969        0.00286       3.39      0.0007
+ACCRUAL          1        0.00842        0.00968       0.87      0.3842
+ASSET_GROWTH     1       -0.00279        0.00240      -1.17      0.2440
+SALES_GROWTH     1     0.00020719        0.00106       0.20      0.8453
+ROA              1       -0.00887        0.00639      -1.39      0.1653
+LEV              1        0.00596        0.00566       1.05      0.2927
+
+Assignment 2 Part II: Year-by-Year Fraud Regressions
+
+Fiscal Year=2013
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read        3131
+Number of Observations Used        3131
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.01083        0.00155       0.49    0.8460
+Error                  3123        9.95723        0.00319
+Corrected Total        3130        9.96806
+
+
+Root MSE              0.05647    R-Square     0.0011
+Dependent Mean        0.00319    Adj R-Sq    -0.0012
+Coeff Var          1767.93558
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1     0.00043639        0.00201       0.22      0.8278
+MFLAG            1        0.00137        0.00362       0.38      0.7042
+FFLAG            1        0.00243        0.00217       1.12      0.2644
+ACCRUAL          1       -0.00494        0.00747      -0.66      0.5084
+ASSET_GROWTH     1    -0.00064820        0.00164      -0.40      0.6918
+SALES_GROWTH     1    -0.00014696     0.00052012      -0.28      0.7775
+ROA              1        0.00408        0.00442       0.92      0.3553
+LEV              1        0.00386        0.00360       1.07      0.2831
+
+Assignment 2 Part II: Year-by-Year Fraud Regressions
+
+Fiscal Year=2014
+
+The REG Procedure
+Model: MODEL1
+Dependent Variable: FRAUD
+
+Number of Observations Read        3089
+Number of Observations Used        3089
+
+
+                             Analysis of Variance
+
+                                    Sum of           Mean
+Source                   DF        Squares         Square    F Value    Pr > F
+
+Model                     7        0.03153        0.00450       2.80    0.0067
+Error                  3081        4.96038        0.00161
+Corrected Total        3088        4.99191
+
+
+Root MSE              0.04012    R-Square     0.0063
+Dependent Mean        0.00162    Adj R-Sq     0.0041
+Coeff Var          2478.90183
+
+
+                          Parameter Estimates
+
+                        Parameter       Standard
+Variable        DF       Estimate          Error    t Value    Pr > |t|
+
+Intercept        1       -0.00124        0.00161      -0.77      0.4410
+MFLAG            1        0.00401        0.00261       1.54      0.1237
+FFLAG            1        0.00445        0.00154       2.89      0.0039
+ACCRUAL          1       -0.00500        0.00627      -0.80      0.4255
+ASSET_GROWTH     1        0.00344        0.00157       2.20      0.0282
+SALES_GROWTH     1    -0.00002043     0.00005932      -0.34      0.7306
+ROA              1        0.00170        0.00340       0.50      0.6162
+LEV              1     0.00040951        0.00284       0.14      0.8852
