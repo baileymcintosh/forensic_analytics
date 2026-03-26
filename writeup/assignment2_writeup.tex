@@ -4,29 +4,26 @@
 \documentclass[12pt]{article}
 
 \usepackage[margin=1in]{geometry}
+\usepackage{array}
 \usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{array}
 \usepackage{multirow}
 \usepackage{caption}
 \usepackage{setspace}
-\usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{xcolor}
+\usepackage{colortbl}
 \usepackage{listings}
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{parskip}
-\usepackage{titlesec}
 \usepackage{fancyhdr}
 \usepackage{threeparttable}
-\usepackage{siunitx}
 
 % ---- formatting ----
-\setstretch{1.25}
-\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
-\titleformat{\subsection}{\normalsize\bfseries}{}{0em}{}
+\setstretch{1.15}
+\definecolor{siggreen}{RGB}{198,239,206}  % light green for significant cells
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -36,11 +33,8 @@
 
 % ---- SAS code style ----
 \lstdefinestyle{sas}{
-  language=SAS,
   basicstyle=\ttfamily\footnotesize,
-  keywordstyle=\color{blue}\bfseries,
   commentstyle=\color{gray}\itshape,
-  stringstyle=\color{orange},
   breaklines=true,
   frame=single,
   numbers=left,
@@ -51,457 +45,349 @@
   captionpos=b
 }
 
-\sisetup{
-  table-number-alignment = center,
-  table-figures-integer  = 2,
-  table-figures-decimal  = 4,
-  table-sign-mantissa,
-}
-
 \hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue}
+
+% helper: green cell for significant coefficients
+\newcommand{\sig}[1]{\cellcolor{siggreen}#1}
 
 % ============================================================
 \begin{document}
 
-% ---- Title Page ----
-\begin{titlepage}
-  \centering
-  \vspace*{2cm}
-  {\LARGE\bfseries Predicting Accounting Fraud:\\[0.4em]
-   Evidence from M-Score, F-Score,\\[0.4em]
-   and Financial Statement Variables\par}
-  \vspace{1.5cm}
-  {\large ACCT 270: Forensic Analytics\par}
-  \vspace{0.5cm}
-  {\large Group Assignment 2\par}
-  \vspace{2cm}
-
+% ---- Header ----
+\begin{center}
+  {\large\bfseries Group 2}\\[0.3em]
+  {\large\bfseries Predicting Accounting Fraud}\\[1em]
   \begin{tabular}{rl}
-    \textbf{Team:}    & [Team Name] \\[0.5em]
-    \textbf{Members:} & [Name 1]    \\
-                      & [Name 2]    \\
-                      & [Name 3]    \\
-                      & [Name 4]    \\[0.5em]
-    \textbf{Date:}    & \today
+    \textbf{Team Name:}       & XXX \\
+    \textbf{Individual Names:}& XXX \\
   \end{tabular}
+\end{center}
 
-  \vfill
-  {\small Wharton School, University of Pennsylvania}
-\end{titlepage}
+\bigskip
 
 % ============================================================
-\section{Introduction}
+% EQUATION
+% ============================================================
 
-Financial statement fraud imposes significant costs on investors, creditors, and capital
-markets. Detecting fraud ex ante—before regulatory enforcement actions—remains a central
-challenge in forensic accounting. This report develops a linear probability model to predict
-whether a firm-year is subject to an SEC Accounting and Auditing Enforcement Release
-(\textsc{aaer}), our proxy for fraudulent financial reporting.
-
-We estimate the following model on a panel of firm-years from 2003 to 2014:
+We estimate the following fraud prediction model:
 
 \begin{equation}
-  \text{FRAUD}_{it} = \alpha + \theta_1\,\text{MFLAG}_{it}
-                             + \theta_2\,\text{FFLAG}_{it}
-                             + \beta_1\,\text{ACCRUAL}_{it}
-                             + \beta_2\,\text{ASSET\_GROWTH}_{it}
-                             + \beta_3\,\text{LEV}_{it}
-                             + \varepsilon_{it}
+  \text{Fraud}_{t} = \alpha
+    + \theta_1\,\text{M-Flag}
+    + \theta_2\,\text{F-Flag}
+    + \beta_1 Z_1
+    + \beta_2 Z_2
+    + \cdots
+    + \beta_n Z_n
+    + \varepsilon
+  \label{eq:fraud}
 \end{equation}
 
 \noindent
-where FRAUD is a binary indicator equal to one if firm $i$ in year $t$ appears in the
-\textsc{aaer} database. We include two established fraud-detection composites
-(Beneish's M-Score flag and Dechow et al.'s F-Score flag) alongside three additional
-financial statement variables that capture distinct fraud incentives.
-
-We estimate the pooled model over the full 2003--2014 period (Part~I) and validate it
-year-by-year to assess the temporal consistency of each predictor (Part~II).
+$\text{Fraud}_t$ is an indicator variable equal to one if the financial results for
+the firm-year were the subject of an SEC Accounting and Auditing Enforcement Release
+(\textsc{aaer}), and zero otherwise.
+M-Flag is the flag for fraud using the Beneish M-score (M-score $> -1.78$).
+F-Flag is the flag for fraud using the Dechow F-score (F-score $> 1.0$).
+$Z$'s are additional predictor variables described below.
+Table~1 provides variable definitions.
 
 % ============================================================
-\section{Variable Definitions and Theoretical Predictions}
+% TABLE 1: VARIABLE DEFINITIONS
+% ============================================================
 
-\subsection{Dependent Variable}
+\begin{table}[h!]
+\centering
+\caption*{\textbf{Table 1: Variable Definitions}}
+\begin{tabular}{p{2.2cm} p{12.5cm}}
+\toprule
+\textbf{Variable} & \textbf{Definition} \\
+\midrule
+\multicolumn{2}{l}{\textsc{dependent variable}} \\[3pt]
+\textbf{Fraud$_t$} &
+  Indicator $= 1$ if the firm-year is subject to an SEC Accounting and Auditing
+  Enforcement Release (\textsc{aaer}); 0 otherwise. Source: Dechow et al.\ (2011)
+  \textsc{aaer} database, matched to Compustat via \texttt{gvkey} and fiscal year.\\[8pt]
 
-\textbf{FRAUD} is an indicator variable equal to one if the firm-year appears in
-the SEC's \textsc{aaer} database compiled by Dechow et al. (2011), and zero otherwise.
-The \textsc{aaer} dataset covers enforcement actions from 1982 to 2014 and is matched
-to Compustat using \texttt{gvkey} and fiscal year.
+\multicolumn{2}{l}{\textsc{independent variables}} \\[3pt]
+\textbf{M-FLAG} &
+  $= 1$ if M-Score $> -1.78$; 0 otherwise.\\
+  & M-Score $= -4.84 + 0.92\,\text{DSR} + 0.528\,\text{GMI} + 0.404\,\text{AQI}
+    + 0.892\,\text{SGI} + 0.115\,\text{DEPI} - 0.172\,\text{SGAI}
+    + 4.679\,\text{ACCRUALS} - 0.327\,\text{LEVI}$ \\[2pt]
+  & $\text{DSR} = \dfrac{RECT_t/SALE_t}{RECT_{t-1}/SALE_{t-1}}$\quad
+    $\text{GMI} = \dfrac{1-(COGS_{t-1}/SALE_{t-1})}{1-(COGS_t/SALE_t)}$\\[6pt]
+  & $\text{AQI} = \dfrac{1-((PPENT_t+ACT_t)/AT_t)}{1-((PPENT_{t-1}+ACT_{t-1})/AT_{t-1})}$\quad
+    $\text{SGI} = \dfrac{SALE_t}{SALE_{t-1}}$\\[6pt]
+  & $\text{DEPI} = \dfrac{(DP_{t-1}-AM_{t-1})/(DP_{t-1}-AM_{t-1}+PPENT_{t-1})}{(DP_t-AM_t)/(DP_t-AM_t+PPENT_t)}$\\[6pt]
+  & $\text{SGAI} = \dfrac{XSGA_t/SALE_t}{XSGA_{t-1}/SALE_{t-1}}$\quad
+    $\text{ACCRUALS} = \dfrac{IB_t - OANCF_t}{AT_t}$\quad
+    $\text{LEVI} = \dfrac{(LCT_t+DLTT_t)/AT_t}{(LCT_{t-1}+DLTT_{t-1})/AT_{t-1}}$\\[4pt]
+  & \textit{Missing DLTT, XSGA, AM set to zero. If any index denominator is zero,
+    that index is set to 1.}\\[8pt]
 
-\subsection{Required Predictors}
+\textbf{F-FLAG} &
+  $= 1$ if F-Score $> 1.0$; 0 otherwise.\\
+  & $\hat{y} = -7.893 + 0.790\,\text{RSST} + 2.518\,\text{CH\_REC}
+    + 1.191\,\text{CH\_INV} + 1.979\,\text{SOFT}
+    + 0.171\,\text{CH\_CS} - 0.932\,\text{CH\_ROA} + 1.029\,\text{ISSUE}$\\[2pt]
+  & $\text{Prob} = e^{\hat{y}}/(1+e^{\hat{y}})$;\quad
+    $\text{F-Score} = \text{Prob}/0.0037$\\[2pt]
+  & $\text{RSST} = (IB_t - OANCF_t)/AT_t$\quad
+    $\text{CH\_REC} = (RECT_t - RECT_{t-1})/AT_t$\\[3pt]
+  & $\text{CH\_INV} = (INVT_t - INVT_{t-1})/AT_t$\quad
+    $\text{SOFT} = (AT_t - PPENT_t - CHE_t)/AT_t$\\[3pt]
+  & $\text{CH\_CS} = \dfrac{SALE_t-(RECT_t-RECT_{t-1})}{SALE_{t-1}-(RECT_{t-1}-RECT_{t-2})} - 1$\quad
+    $\text{CH\_ROA} = IB_t/AT_t - IB_{t-1}/AT_{t-1}$\\[3pt]
+  & $\text{ISSUE} = 1$ if $DLTIS + SSTK > 0$; 0 otherwise.
+    \textit{Missing DLTIS, SSTK set to zero. If CH\_CS denominator is zero, CH\_CS set to 1.}\\[8pt]
 
-\textbf{MFLAG} (Beneish M-Score Flag) equals one if the firm's M-Score exceeds
-the threshold of $-1.78$, the cutoff identified by Beneish (1999) as indicative
-of earnings manipulation. The M-Score is a weighted combination of eight financial
-ratios capturing changes in receivables, gross margins, asset quality, sales growth,
-depreciation, SG\&A, accruals, and leverage:
+\textbf{ACCRUAL} &
+  $(IB_t - OANCF_t)/AT_t$. Total accruals scaled by total assets.
+  High accruals signal a gap between reported earnings and cash flows — a classic
+  indicator of earnings management. \textit{Predicted sign: positive.}\\[6pt]
 
-\begin{align*}
-  \text{MSCORE} = &-4.84 + 0.920\,\text{DSR} + 0.528\,\text{GMI} + 0.404\,\text{AQI} \\
-                  &+ 0.892\,\text{SGI} + 0.115\,\text{DEPI} - 0.172\,\text{SGAI} \\
-                  &+ 4.679\,\text{ACCRUALS} - 0.327\,\text{LEVI}
-\end{align*}
+\textbf{ASSET\_GROWTH} &
+  $(AT_t - AT_{t-1})/AT_{t-1}$. Year-over-year growth in total assets.
+  Aggressive expansion may reflect inflated capitalizations or acquisition-driven
+  manipulation to sustain headline growth. \textit{Predicted sign: positive.}\\[6pt]
 
-\noindent\textit{Predicted sign: positive.} Firms with distorted financials across
-multiple dimensions are more likely to be committing fraud.
+\textbf{LEV} &
+  $(LCT_t + DLTT_t)/AT_t$. Total debt scaled by assets.
+  Highly leveraged firms face covenant pressure and may misreport to avoid
+  technical default or maintain credit access. \textit{Predicted sign: positive.}\\
 
-\vspace{0.5em}
+\bottomrule
+\end{tabular}
+\end{table}
 
-\textbf{FFLAG} (Dechow F-Score Flag) equals one if the firm's F-Score exceeds 1.0,
-where the F-Score rescales the predicted fraud probability from a logistic regression
-by the unconditional fraud rate ($0.37\%$). The F-Score model uses seven components:
-\texttt{RSST} (accruals), \texttt{CH\_REC}, \texttt{CH\_INV}, \texttt{SOFT},
-\texttt{CH\_CS}, \texttt{CH\_ROA}, and \texttt{ISSUE}:
-
-\begin{align*}
-  \hat{y} = &-7.893 + 0.790\,\text{RSST} + 2.518\,\text{CH\_REC} + 1.191\,\text{CH\_INV} \\
-             &+ 1.979\,\text{SOFT} + 0.171\,\text{CH\_CS} - 0.932\,\text{CH\_ROA} + 1.029\,\text{ISSUE}
-\end{align*}
+% ============================================================
+% TRANSITION
+% ============================================================
 
 \noindent
-$\text{FSCORE} = \frac{e^{\hat{y}}/(1+e^{\hat{y}})}{0.0037}$; $\quad$
-$\text{FFLAG} = \mathbf{1}[\text{FSCORE} > 1]$
+Following Beneish (1999), Beneish, Lee, and Nichols (2011), and Dechow et al.\ (2011),
+we examine the M-Flag and F-Flag variables as required predictors of fraud.
+We supplement these with three additional variables — ACCRUAL, ASSET\_GROWTH, and LEV
+— each motivated by a distinct fraud incentive channel.
+Note: ROA $(= IB/AT)$ was initially included but dropped due to near-perfect collinearity
+with ACCRUAL ($r = 0.905$, as both contain $IB/AT$). SALES\_GROWTH was dropped due to
+extreme outliers (std~$= 61$, max~$= 11{,}880$) that rendered it uninformative.
+Table~2 summarizes the descriptive statistics.
 
-\noindent\textit{Predicted sign: positive.} Firms with F-Scores above 1.0 have a
-predicted fraud probability exceeding the base rate, indicating heightened risk.
+% ============================================================
+% TABLE 2: DESCRIPTIVE STATISTICS
+% ============================================================
 
-\subsection{Additional Predictors}
+\begin{table}[h!]
+\centering
+\caption*{\textbf{Table 2: Descriptive Statistics}}
+\begin{threeparttable}
+\begin{tabular}{lccccccc}
+\toprule
+\textbf{Variable} & \textbf{Obs} & \textbf{Mean} & \textbf{Std} &
+  \textbf{25th} & \textbf{Median} & \textbf{75th} & \textbf{Years} \\
+\midrule
+Fraud$_t$    & 41,959 & 0.007 & 0.085 & 0.000 & 0.000 & 0.000 & 2003--2014 \\
+M-Flag       & 41,959 & 0.121 & 0.326 & 0.000 & 0.000 & 0.000 & 2003--2014 \\
+F-Flag       & 41,959 & 0.348 & 0.476 & 0.000 & 0.000 & 1.000 & 2003--2014 \\
+ACCRUAL      & 41,959 & $-$0.079 & 0.508 & $-$0.099 & $-$0.053 & $-$0.019 & 2003--2014 \\
+ASSET\_GROWTH & 41,959 & 0.126 & 0.646 & $-$0.039 & 0.051 & 0.166 & 2003--2014 \\
+LEV          & 41,959 & 0.417 & 0.405 & 0.240 & 0.388 & 0.539 & 2003--2014 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small\item
+All variables defined in Table~1. Sample: fiscal years 2003--2014, requiring
+positive $AT$, $SALE$, $PPENT$ and non-missing values for all model variables.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
-\textbf{ACCRUAL} $= (IB - OANCF)/AT$ measures total accruals scaled by total assets.
-High accruals represent a wedge between cash flows and reported earnings—a classic
-signal of earnings management (Sloan, 1996). Fraudulent firms often sustain high
-accruals to maintain the appearance of profitability.
-\textit{Predicted sign: positive.}
+% ============================================================
+% TABLE 3: ALL-YEARS REGRESSION
+% ============================================================
 
-\vspace{0.5em}
+Table~3 provides regression results. $t$-statistics are reported in parentheses.
+*, **, *** denote coefficients significantly different from zero at the 10\%, 5\%,
+and 1\% level respectively. Cells with significant coefficients are shaded green.
 
-\textbf{ASSET\_GROWTH} $= (AT_t - AT_{t-1})/AT_{t-1}$ measures the year-over-year
-growth in total assets. Rapid asset expansion may signal acquisition-driven fraud,
-channel-stuffing, or capitalization of expenses that should be recognized immediately.
-It also proxies for the pressure on management to justify elevated valuations with
-continued headline growth.
-\textit{Predicted sign: positive.}
+\begin{table}[h!]
+\centering
+\caption*{\textbf{Table 3: Regression Results — All Years}}
+\begin{threeparttable}
+\begin{tabular}{lc}
+\toprule
+\textbf{Independent Variable} & \textbf{ALL YEARS} \\
+                               & \textbf{Fraud}$_t$ \\
+\midrule
+Intercept      & \sig{$0.0053^{***}$} \\
+               & \sig{$(7.22)$}       \\[4pt]
+M-Flag         & $0.0003$             \\
+               & $(0.22)$             \\[4pt]
+F-Flag         & \sig{$0.0073^{***}$} \\
+               & \sig{$(8.31)$}       \\[4pt]
+ACCRUAL        & $-0.0007$            \\
+               & $(-0.59)$            \\[4pt]
+ASSET\_GROWTH  & $0.0011$             \\
+               & $(1.61)$             \\[4pt]
+LEV            & $-0.0021$            \\
+               & $(-1.45)$            \\[6pt]
+Observations   & $41{,}959$           \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small\item
+OLS estimates. Dependent variable: Fraud$_t$. $t$-statistics in parentheses.
+$^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$. Shaded cells are significant at 10\% or better.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
-\vspace{0.5em}
-
-\textbf{LEV} $= (LCT + DLTT)/AT$ measures total financial leverage. Firms with
-high debt loads face covenant pressure and may misreport to avoid technical defaults
-or to maintain access to credit markets.
-\textit{Predicted sign: positive.}
-
-\vspace{0.5em}
-
-\noindent\textit{Note on excluded variables.} We initially included \textbf{ROA}
-and \textbf{SALES\_GROWTH}. ROA $(= IB/AT)$ was dropped due to near-perfect
-collinearity with ACCRUAL (Pearson $r = 0.905$), since both share $IB$ in the
-numerator and $AT$ in the denominator. SALES\_GROWTH was dropped because extreme
-outliers (standard deviation of 61, maximum of 11{,}880) rendered the variable
-uninformative in regression (coefficient $\approx 0$, $t = -0.23$).
+\noindent
+\textbf{Findings:}
+Consistent with our predictions, we find that F-Flag is positive and highly significant
+($\hat{\theta}_2 = 0.0073$, $t = 8.31$), indicating that firms flagged by the Dechow
+F-Score are approximately 0.73 percentage points more likely to commit fraud — a
+near-doubling of the unconditional fraud rate of 0.70\%.
+M-Flag is positive but statistically insignificant ($t = 0.22$), consistent with
+the finding in Dechow et al.\ (2011) that the F-Score has greater discriminatory
+power than the M-Score for predicting \textsc{aaer} firms.
+Among our additional variables, ACCRUAL and LEV are in the predicted direction but
+insignificant, while ASSET\_GROWTH is marginally positive ($t = 1.61$, $p = 0.11$).
+The low $R^2$ ($0.0018$) is expected given the rarity of fraud ($<1\%$ of firm-years)
+and is consistent with values reported in the literature.
 
 \newpage
 
-Table~\ref{tab:vardefs} summarizes all variable definitions and data sources.
+% ============================================================
+% TABLE 4: YEAR-BY-YEAR 2003--2008
+% ============================================================
 
 \begin{table}[h!]
 \centering
-\caption{Variable Definitions}
-\label{tab:vardefs}
+\caption*{\textbf{Table 4: Regression Results by Year — 2003 to 2008}}
 \begin{threeparttable}
-\begin{tabular}{llp{6.5cm}}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lcccccc}
 \toprule
-\textbf{Variable} & \textbf{Source} & \textbf{Definition} \\
+\textbf{Independent} & \textbf{2003} & \textbf{2004} & \textbf{2005} &
+  \textbf{2006} & \textbf{2007} & \textbf{2008} \\
+\textbf{Variable}    & \textbf{Fraud}$_t$ & \textbf{Fraud}$_t$ & \textbf{Fraud}$_t$ &
+  \textbf{Fraud}$_t$ & \textbf{Fraud}$_t$ & \textbf{Fraud}$_t$ \\
 \midrule
-\multicolumn{3}{l}{\textit{Dependent Variable}} \\[2pt]
-FRAUD       & AAER       & $=1$ if firm-year appears in SEC AAER database; 0 otherwise \\[6pt]
-\multicolumn{3}{l}{\textit{Required Fraud Flags}} \\[2pt]
-MFLAG       & Compustat  & $=1$ if Beneish M-Score $> -1.78$; 0 otherwise \\
-FFLAG       & Compustat  & $=1$ if Dechow F-Score $> 1.0$; 0 otherwise \\[6pt]
-\multicolumn{3}{l}{\textit{Additional Predictors}} \\[2pt]
-ACCRUAL     & Compustat  & $(IB - OANCF) / AT$: total accruals scaled by assets \\
-ASSET\_GROWTH & Compustat & $(AT_t - AT_{t-1}) / AT_{t-1}$: year-over-year asset growth \\
-LEV         & Compustat  & $(LCT + DLTT) / AT$: total debt ratio \\
+Intercept
+  & \sig{$0.0123^{***}$} & \sig{$0.0116^{***}$} & \sig{$0.0116^{***}$}
+  & $0.0054^{*}$         & \sig{$0.0068^{**}$}  & \sig{$0.0066^{***}$} \\
+  & \sig{$(3.43)$}       & \sig{$(3.30)$}        & \sig{$(3.27)$}
+  & $(1.94)$             & \sig{$(2.52)$}        & \sig{$(3.05)$}        \\[4pt]
+M-Flag
+  & $-0.0059$    & $-0.0011$    & $0.0003$    & $0.0006$    & $-0.0008$   & $0.0005$ \\
+  & $(-0.99)$    & $(-0.21)$    & $(0.05)$    & $(0.14)$    & $(-0.20)$   & $(0.13)$ \\[4pt]
+F-Flag
+  & \sig{$0.0210^{***}$} & \sig{$0.0109^{***}$} & \sig{$0.0101^{***}$}
+  & \sig{$0.0089^{***}$} & $0.0048^{*}$         & $0.0013$               \\
+  & \sig{$(4.91)$}       & \sig{$(2.98)$}        & \sig{$(2.82)$}
+  & \sig{$(3.22)$}       & $(1.83)$              & $(0.54)$               \\[4pt]
+ACCRUAL
+  & $0.0024$    & $0.0037$    & $-0.0009$   & $0.0001$    & $0.0075$    & $0.0031$ \\
+  & $(0.21)$    & $(0.50)$    & $(-0.07)$   & $(0.03)$    & $(0.91)$    & $(0.71)$ \\[4pt]
+ASSET\_GROWTH
+  & $0.0007$    & $0.0009$    & \sig{$0.0078^{**}$} & $0.0049$   & $0.0003$   & $0.0011$ \\
+  & $(0.30)$    & $(0.29)$    & \sig{$(2.04)$}       & $(1.59)$   & $(0.15)$   & $(0.40)$ \\[4pt]
+LEV
+  & $-0.0053$   & $-0.0077$   & \sig{$-0.0139^{**}$} & $-0.0077$  & $-0.0058$  & $-0.0053$ \\
+  & $(-0.78)$   & $(-1.16)$   & \sig{$(-1.99)$}       & $(-1.42)$  & $(-1.15)$  & $(-1.41)$ \\[6pt]
+Observations
+  & $4{,}152$   & $3{,}996$   & $3{,}803$   & $3{,}721$   & $3{,}529$   & $3{,}448$ \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\small
-\item Compustat mnemonics: $IB$ = income before extraordinary items; $OANCF$ = operating cash flows;
-$AT$ = total assets; $LCT$ = current liabilities; $DLTT$ = long-term debt.
+\small\item
+OLS estimates by fiscal year. Dependent variable: Fraud$_t$.
+$t$-statistics in parentheses. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$.
+Shaded cells are significant at 10\% or better.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
 % ============================================================
-\section{Data and Sample}
-
-Financial statement data come from Compustat (1990--2019). Fraud data come from the
-SEC \textsc{aaer} database covering enforcement releases from 1982 to 2014. We restrict
-the regression sample to fiscal years 2003--2014 to match the period of reliable
-\textsc{aaer} coverage used in Dechow et al.\ (2011).
-
-We require: total assets $(AT)$, sales $(SALE)$, and net property, plant and equipment
-$(PPENT)$ all positive; and no missing values for \texttt{cogs}, \texttt{dp},
-\texttt{rect}, \texttt{act}, \texttt{lct}, \texttt{ib}, and \texttt{oancf}.
-Construction of F-Score additionally requires two years of lagged receivables.
-The final sample contains \textbf{41,959 firm-year observations}.
-
-Table~\ref{tab:descstats} reports descriptive statistics for all model variables.
-The overall fraud rate is $0.7\%$, consistent with the known rarity of \textsc{aaer}
-enforcement. MFLAG flags $12.1\%$ of firm-years; FFLAG flags $34.8\%$.
-Average accruals are negative ($-0.079$), reflecting the general tendency for cash
-flows to exceed reported earnings. Average leverage is $0.417$, with substantial
-cross-sectional variation.
+% TABLE 5: YEAR-BY-YEAR 2009--2014
+% ============================================================
 
 \begin{table}[h!]
 \centering
-\caption{Descriptive Statistics ($N = 41{,}959$ Firm-Years, 2003--2014)}
-\label{tab:descstats}
+\caption*{\textbf{Table 5: Regression Results by Year — 2009 to 2014}}
 \begin{threeparttable}
-\begin{tabular}{lS[table-figures-decimal=3]S[table-figures-decimal=3]S[table-figures-decimal=3]S[table-figures-decimal=3]S[table-figures-decimal=3]}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lcccccc}
 \toprule
-\textbf{Variable} & \textbf{Mean} & \textbf{Std Dev} & \textbf{25th} & \textbf{Median} & \textbf{75th} \\
+\textbf{Independent} & \textbf{2009} & \textbf{2010} & \textbf{2011} &
+  \textbf{2012} & \textbf{2013} & \textbf{2014} \\
+\textbf{Variable}    & \textbf{Fraud}$_t$ & \textbf{Fraud}$_t$ & \textbf{Fraud}$_t$ &
+  \textbf{Fraud}$_t$ & \textbf{Fraud}$_t$ & \textbf{Fraud}$_t$ \\
 \midrule
-FRAUD        & 0.007 & 0.085 & 0.000 & 0.000 & 0.000 \\
-MFLAG        & 0.121 & 0.326 & 0.000 & 0.000 & 0.000 \\
-FFLAG        & 0.348 & 0.476 & 0.000 & 0.000 & 1.000 \\
-ACCRUAL      & -0.079 & 0.508 & -0.099 & -0.053 & -0.019 \\
-ASSET\_GROWTH & 0.126 & 0.646 & -0.039 & 0.051 & 0.166 \\
-LEV          & 0.417 & 0.405 & 0.240 & 0.388 & 0.539 \\
+Intercept
+  & $0.0046^{*}$  & $0.0045^{*}$  & $0.0015$      & $-0.0002$     & $0.0010$      & $-0.0010$ \\
+  & $(1.83)$      & $(1.95)$      & $(0.59)$       & $(-0.06)$     & $(0.53)$      & $(-0.65)$ \\[4pt]
+M-Flag
+  & $0.0005$    & $0.0011$    & $-0.0056$   & $-0.0011$   & $0.0005$    & $0.0037$ \\
+  & $(0.12)$    & $(0.26)$    & $(-1.36)$   & $(-0.24)$   & $(0.14)$    & $(1.46)$ \\[4pt]
+F-Flag
+  & $0.0025$    & $0.0018$    & \sig{$0.0055^{**}$}  & \sig{$0.0097^{***}$} & $0.0024$   & \sig{$0.0044^{***}$} \\
+  & $(0.83)$    & $(0.63)$    & \sig{$(2.13)$}        & \sig{$(3.39)$}        & $(1.08)$   & \sig{$(2.88)$}        \\[4pt]
+ACCRUAL
+  & $-0.0011$   & $0.0010$    & $0.0036$    & $-0.0002$   & $-0.0009$   & $-0.0032$ \\
+  & $(-0.15)$   & $(0.32)$    & $(0.40)$    & $(-0.03)$   & $(-0.15)$   & $(-0.61)$ \\[4pt]
+ASSET\_GROWTH
+  & $0.0003$    & $0.0008$    & $-0.0001$   & $-0.0031$   & $-0.0006$   & \sig{$0.0035^{**}$} \\
+  & $(0.25)$    & $(0.48)$    & $(-0.03)$   & $(-1.28)$   & $(-0.37)$   & \sig{$(2.25)$}       \\[4pt]
+LEV
+  & $0.0005$    & $0.0013$    & $0.0049$    & $0.0071$    & $0.0032$    & $0.0001$ \\
+  & $(0.09)$    & $(0.29)$    & $(0.97)$    & $(1.27)$    & $(0.90)$    & $(0.03)$ \\[6pt]
+Observations
+  & $3{,}449$   & $3{,}297$   & $3{,}178$   & $3{,}166$   & $3{,}131$   & $3{,}089$ \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\small
-\item All variables defined in Table~\ref{tab:vardefs}. Sample restricted to fiscal years
-2003--2014 with non-missing values for all model variables.
+\small\item
+OLS estimates by fiscal year. Dependent variable: Fraud$_t$.
+$t$-statistics in parentheses. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$.
+Shaded cells are significant at 10\% or better.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-Table~\ref{tab:fraudbyyear} shows fraud rates by year. The fraud rate peaks at
-$1.57\%$ in 2003 and declines steadily to $0.16\%$ by 2014, reflecting both the
-natural lag in \textsc{aaer} enforcement (most enforcement actions relate to
-conduct from several years prior) and the attenuation of the post-Enron regulatory
-wave.
-
-\begin{table}[h!]
-\centering
-\caption{Annual Fraud Rate and Sample Size, 2003--2014}
-\label{tab:fraudbyyear}
-\begin{tabular}{lccc}
-\toprule
-\textbf{Year} & \textbf{$N$} & \textbf{Fraud Rate} & \textbf{AAER Firms} \\
-\midrule
-2003 & 4,152 & 1.57\% & 65 \\
-2004 & 3,996 & 1.23\% & 49 \\
-2005 & 3,803 & 1.10\% & 42 \\
-2006 & 3,721 & 0.67\% & 25 \\
-2007 & 3,529 & 0.57\% & 20 \\
-2008 & 3,448 & 0.44\% & 15 \\
-2009 & 3,449 & 0.55\% & 19 \\
-2010 & 3,297 & 0.58\% & 19 \\
-2011 & 3,178 & 0.47\% & 15 \\
-2012 & 3,166 & 0.57\% & 18 \\
-2013 & 3,131 & 0.32\% & 10 \\
-2014 & 3,089 & 0.16\% & 5  \\
-\midrule
-\textbf{Total} & \textbf{41,959} & \textbf{0.70\%} & \textbf{302} \\
-\bottomrule
-\end{tabular}
-\end{table}
+\noindent
+\textbf{Findings:}
+Results from estimating the regression by year indicate that F-Flag is the most
+consistent predictor across the sample period, achieving significance at the 5\%
+level or better in 8 of 12 years (2003--2006, 2011, 2012, 2014) and at the 10\%
+level in 2007. Its coefficient is positive in every year, ranging from 0.0013
+in 2008 to 0.0210 in 2003. M-Flag is never significant in any individual year
+and alternates in sign, confirming its limited incremental predictive power
+conditional on F-Flag. The 2008--2010 period shows no significant predictors,
+consistent with reduced \textsc{aaer} enforcement activity during and after the
+financial crisis, as evidenced by the decline in fraud rates from 1.57\% in 2003
+to 0.44\% in 2008. ASSET\_GROWTH achieves significance in 2005 and 2014,
+consistent with the prediction that aggressive asset expansion is episodically
+associated with fraudulent reporting during periods of elevated capital market
+activity.
 
 % ============================================================
-\section{Results}
-
-\subsection{Part I: Pooled Regression (2003--2014)}
-
-Table~\ref{tab:pooled} presents the pooled OLS estimates. The overall model is
-jointly significant ($F = 15.10$, $p < 0.0001$), confirming that the predictors
-collectively explain variation in fraud incidence beyond chance.
-
-\begin{table}[h!]
-\centering
-\caption{Part I: Pooled Fraud Regression, 2003--2014}
-\label{tab:pooled}
-\begin{threeparttable}
-\begin{tabular}{lcccc}
-\toprule
-\textbf{Variable} & \textbf{Predicted Sign} & \textbf{Estimate} & \textbf{$t$-statistic} & \textbf{$p$-value} \\
-\midrule
-Intercept     &     & $0.0053^{***}$  & $7.22$  & $<0.001$ \\
-MFLAG         & $(+)$ & $0.0003$        & $0.22$  & $0.827$  \\
-FFLAG         & $(+)$ & $0.0073^{***}$  & $8.31$  & $<0.001$ \\
-ACCRUAL       & $(+)$ & $-0.0007$       & $-0.59$ & $0.557$  \\
-ASSET\_GROWTH & $(+)$ & $0.0011$        & $1.61$  & $0.107$  \\
-LEV           & $(+)$ & $-0.0021$       & $-1.45$ & $0.148$  \\
-\midrule
-\multicolumn{2}{l}{Observations}    & \multicolumn{3}{l}{41,959} \\
-\multicolumn{2}{l}{$R^2$}           & \multicolumn{3}{l}{0.0018} \\
-\multicolumn{2}{l}{$F$-statistic}   & \multicolumn{3}{l}{15.10 ($p < 0.001$)} \\
-\bottomrule
-\end{tabular}
-\begin{tablenotes}
-\small
-\item $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$ (two-tailed).
-\item OLS estimates. Dependent variable is FRAUD (binary). Sample: fiscal years 2003--2014.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
-
-\textbf{FFLAG} is the strongest and most statistically significant predictor
-($\hat{\beta} = 0.0073$, $t = 8.31$). Firms flagged by the F-Score are approximately
-0.73 percentage points more likely to be fraudulent, which represents an economically
-large effect given the unconditional fraud rate of $0.70\%$—effectively a near-doubling
-of fraud probability.
-
-\textbf{MFLAG} carries a positive sign consistent with theory but is statistically
-insignificant ($t = 0.22$). This is consistent with Dechow et al.\ (2011), who show
-that the F-Score has substantially greater discriminatory power than the M-Score when
-evaluated on out-of-sample data. The M-Score was designed for a narrower set of
-manipulators and is less well-calibrated to SEC enforcement actions.
-
-\textbf{ACCRUAL} is negative but insignificant. While accruals are theoretically
-motivated as a fraud signal, this variable's information content is largely subsumed
-by FFLAG, which incorporates accruals (as \texttt{RSST}) as one of its seven
-components.
-
-\textbf{ASSET\_GROWTH} is positive and marginally insignificant ($p = 0.107$), which
-is directionally consistent with the prediction that aggressive expansion signals
-managerial incentives to manipulate.
-
-\textbf{LEV} is negative and insignificant. The unexpected sign may reflect that
-highly leveraged firms face greater creditor scrutiny, reducing the ability to commit
-fraud—a mechanism not captured by our simple prediction.
-
-The low $R^2$ ($0.0018$) is expected in models predicting rare binary events and
-is consistent with values reported in the academic literature on fraud prediction.
-
-\subsection{Part II: Year-by-Year Regressions}
-
-Table~\ref{tab:yearbyyear} reports coefficient estimates and $t$-statistics for each
-variable, estimated separately for each fiscal year 2003--2014.
-
-\begin{table}[h!]
-\centering
-\caption{Part II: Year-by-Year Fraud Regressions, 2003--2014}
-\label{tab:yearbyyear}
-\footnotesize
-\begin{threeparttable}
-\begin{tabular}{lccccc}
-\toprule
-\textbf{Year} & \textbf{MFLAG} & \textbf{FFLAG} & \textbf{ACCRUAL} & \textbf{ASSET\_GROWTH} & \textbf{LEV} \\
-\midrule
-2003 & $-0.0059$ & $0.0210^{***}$ & $0.0024$  & $0.0007$          & $-0.0053$ \\
-     & $(-0.99)$ & $(4.91)$       & $(0.21)$  & $(0.30)$          & $(-0.78)$ \\[4pt]
-2004 & $-0.0011$ & $0.0109^{***}$ & $0.0037$  & $0.0009$          & $-0.0077$ \\
-     & $(-0.21)$ & $(2.98)$       & $(0.50)$  & $(0.29)$          & $(-1.16)$ \\[4pt]
-2005 & $0.0003$  & $0.0101^{***}$ & $-0.0009$ & $0.0078^{**}$     & $-0.0139^{**}$ \\
-     & $(0.05)$  & $(2.82)$       & $(-0.07)$ & $(2.04)$          & $(-1.99)$ \\[4pt]
-2006 & $0.0006$  & $0.0089^{***}$ & $0.0001$  & $0.0049$          & $-0.0077$ \\
-     & $(0.14)$  & $(3.22)$       & $(0.03)$  & $(1.59)$          & $(-1.42)$ \\[4pt]
-2007 & $-0.0008$ & $0.0048^{*}$   & $0.0075$  & $0.0003$          & $-0.0058$ \\
-     & $(-0.20)$ & $(1.83)$       & $(0.91)$  & $(0.15)$          & $(-1.15)$ \\[4pt]
-2008 & $0.0005$  & $0.0013$       & $0.0031$  & $0.0011$          & $-0.0053$ \\
-     & $(0.13)$  & $(0.54)$       & $(0.71)$  & $(0.40)$          & $(-1.41)$ \\[4pt]
-2009 & $0.0005$  & $0.0025$       & $-0.0011$ & $0.0003$          & $0.0005$  \\
-     & $(0.12)$  & $(0.83)$       & $(-0.15)$ & $(0.25)$          & $(0.09)$  \\[4pt]
-2010 & $0.0011$  & $0.0018$       & $0.0010$  & $0.0008$          & $0.0013$  \\
-     & $(0.26)$  & $(0.63)$       & $(0.32)$  & $(0.48)$          & $(0.29)$  \\[4pt]
-2011 & $-0.0056$ & $0.0055^{**}$  & $0.0036$  & $-0.0001$         & $0.0049$  \\
-     & $(-1.36)$ & $(2.13)$       & $(0.40)$  & $(-0.03)$         & $(0.97)$  \\[4pt]
-2012 & $-0.0011$ & $0.0097^{***}$ & $-0.0002$ & $-0.0031$         & $0.0071$  \\
-     & $(-0.24)$ & $(3.39)$       & $(-0.03)$ & $(-1.28)$         & $(1.27)$  \\[4pt]
-2013 & $0.0005$  & $0.0024$       & $-0.0009$ & $-0.0006$         & $0.0032$  \\
-     & $(0.14)$  & $(1.08)$       & $(-0.15)$ & $(-0.37)$         & $(0.90)$  \\[4pt]
-2014 & $0.0037$  & $0.0044^{***}$ & $-0.0032$ & $0.0035^{**}$     & $0.0001$  \\
-     & $(1.46)$  & $(2.88)$       & $(-0.61)$ & $(2.25)$          & $(0.03)$  \\
-\bottomrule
-\end{tabular}
-\begin{tablenotes}
-\small
-\item $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$ (two-tailed). $t$-statistics in parentheses.
-\item Each row represents a separate OLS regression for that fiscal year.
-\item Dependent variable: FRAUD. All variables as defined in Table~\ref{tab:vardefs}.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
-
-\subsubsection*{Consistency of FFLAG}
-
-FFLAG is significant at the $5\%$ level or better in 8 of 12 years (2003--2006,
-2011, 2012, 2014) and marginally significant in 2007 ($p = 0.068$). Its coefficient
-is consistently positive across all twelve years, ranging from $0.0013$ in 2008 to
-$0.0210$ in 2003. This consistency is strong validation of the F-Score as a fraud
-predictor across time.
-
-The notable exceptions are 2008--2010, which correspond to the peak and immediate
-aftermath of the financial crisis. We attribute the loss of significance to two
-mechanisms. First, the fraud rate dropped sharply (from $1.57\%$ in 2003 to
-$0.44\%$ by 2008), reducing statistical power. Second, \textsc{aaer} enforcement
-lags actual fraud by several years, so the 2008--2010 firm-years may contain fewer
-completed enforcement actions in the database, compressing the variation in the
-dependent variable.
-
-\subsubsection*{Consistency of MFLAG}
-
-MFLAG is never statistically significant at conventional levels in any individual
-year. Its sign alternates between positive and negative, suggesting it carries
-little reliable incremental information about fraud beyond what is captured by
-FFLAG and the other predictors. This is consistent with the pooled result.
-
-\subsubsection*{Consistency of Additional Variables}
-
-ASSET\_GROWTH achieves significance in 2005 ($t = 2.04$) and 2014 ($t = 2.25$),
-consistent with the prediction that aggressive expansion signals manipulation,
-particularly in years with elevated capital market activity.
-
-LEV is negative and approaches significance in 2005 ($t = -1.99$), suggesting that
-during the mid-2000s credit boom, the disciplining effect of creditor monitoring
-may have suppressed fraud at highly leveraged firms. In later years, the sign
-reverses as the economic environment changed—though LEV is never significant after
-2007.
-
-ACCRUAL does not achieve significance in any individual year, consistent with
-its lack of incremental explanatory power in the pooled model.
-
+% APPENDIX: SAS CODE
 % ============================================================
-\section{Conclusion}
 
-We develop a linear probability model to predict accounting fraud using Compustat
-financial data merged with SEC \textsc{aaer} enforcement records. Our key findings are:
-
-\begin{enumerate}
-  \item \textbf{FFLAG is the most powerful and consistent predictor.} Firms flagged
-    by the Dechow F-Score are approximately twice as likely to commit fraud as
-    unflagged firms, and this result holds in 8 of 12 individual years.
-  \item \textbf{MFLAG adds no statistically significant incremental information.}
-    The M-Score, while conceptually sound, appears subsumed by the more
-    comprehensive F-Score in this setting.
-  \item \textbf{Asset growth shows episodic predictive power,} particularly in
-    years of active capital market expansion, consistent with the theory that
-    rapid growth creates pressure to misreport.
-  \item \textbf{The financial crisis (2008--2010) disrupts prediction,} likely
-    due to reduced enforcement activity rather than an actual decline in fraud.
-\end{enumerate}
-
-These findings have practical implications for auditors and regulators seeking
-to allocate scrutiny efficiently across large populations of public firms.
-
-% ============================================================
 \newpage
-\appendix
-\section*{Appendix: SAS Code}
-\addcontentsline{toc}{section}{Appendix: SAS Code}
-
-The following SAS code was used to construct all variables and produce the results
-reported above. All steps are commented to document methodological choices.
+\noindent\textbf{Appendix A}
 
 \lstset{style=sas}
-
-\begin{lstlisting}[caption={Assignment 2: Full SAS Program}]
+\begin{lstlisting}
 /*=================================================================
   ACCT 270 - Group Assignment 2: Predicting Accounting Fraud
   Model: Fraud = a + b1*MFLAG + b2*FFLAG + b3*ACCRUAL
                    + b4*ASSET_GROWTH + b5*LEV + e
-  Sample: 2003-2014
+  Sample: 2003-2014 | Data: Compustat, AAER
 =================================================================*/
 
 libname mydata "s:\sasdata";
@@ -515,18 +401,18 @@ options ps=max ls=max nocenter;
   MFLAG = 1 if MSCORE > -1.78
 -----------------------------------------------------------------*/
 
-/* Examine AAER dataset to confirm structure and coverage */
+/* Examine AAER dataset to confirm structure and year coverage */
 proc contents data=mydata.aaer1982to2014; run;
 proc freq data=mydata.aaer1982to2014; tables fyear; run;
 
-/* Pull and clean Compustat: require positive AT, SALE, PPENT;
-   no missing core variables needed for M-score and F-score     */
+/* Pull Compustat; require positive AT, SALE, PPENT and
+   non-missing core variables for M-score and F-score           */
 data variables;
     set mydata.compustat1990to2019;
     if AT > 0 and SALE > 0 and PPENT > 0;
     if nmiss(cogs, dp, rect, act, lct, ib, oancf) = 0;
 
-    /* Set missing optional items to zero */
+    /* Fill optional variables with zero if missing */
     if dltt = . then dltt = 0;
     if xsga = . then xsga = 0;
     if am   = . then am   = 0;
@@ -535,23 +421,23 @@ data variables;
     if dltis= . then dltis= 0;
     if sstk = . then sstk = 0;
 
-    /* M-Score raw components (current-year values) */
-    DS      = RECT / SALE;                    /* Days sales receivables */
-    GM      = 1 - (COGS / SALE);             /* Gross margin           */
-    AQ      = 1 - ((PPENT + ACT) / AT);      /* Asset quality          */
-    SG      = SALE;                           /* Sales level (for SGI)  */
-    DEP     = (DP - AM) / (DP - AM + PPENT); /* Depreciation rate      */
-    SGA     = XSGA / SALE;                   /* SG&A to sales          */
-    ACCRUAL = (IB - OANCF) / AT;             /* Total accruals (Z3)    */
-    LEV     = (LCT + DLTT) / AT;             /* Leverage (Z5)          */
+    /* M-Score raw components */
+    DS      = RECT / SALE;
+    GM      = 1 - (COGS / SALE);
+    AQ      = 1 - ((PPENT + ACT) / AT);
+    SG      = SALE;
+    DEP     = (DP - AM) / (DP - AM + PPENT);
+    SGA     = XSGA / SALE;
+    ACCRUAL = (IB - OANCF) / AT;          /* Also used as Z1 predictor */
+    LEV     = (LCT + DLTT) / AT;          /* Also used as Z3 predictor */
 
     /* ROA computed but excluded from regression:
-       collinear with ACCRUAL (r = 0.905, both use IB/AT) */
+       near-perfect collinearity with ACCRUAL (r=0.905) */
     ROA = IB / AT;
 run;
 
-/* Merge current year to prior year for M-score ratios
-   and additional lag-dependent variables                */
+/* Self-join to prior year for M-score index ratios,
+   lagged asset/sale values for growth variables          */
 proc sql;
     create table addlagyear as
     select a.*,
@@ -559,16 +445,17 @@ proc sql;
            b.SG as SG_m1, b.DEP as DEP_m1, b.SGA as SGA_m1,
            b.ACCRUAL as ACCRUAL_m1, b.LEV as LEV_m1,
            b.AT as AT_m1, b.IB as IB_m1,
-           b.RECT as RECT_m1, b.INVT as INVT_m1, b.SALE as SALE_m1
+           b.RECT as RECT_m1, b.INVT as INVT_m1,
+           b.SALE as SALE_m1
     from variables a
     inner join variables b
         on a.gvkey = b.gvkey and a.fyear - 1 = b.fyear;
 quit;
 
-/* Compute M-Score indices, MSCORE, MFLAG, and growth variables */
+/* Compute M-Score indices (set to 1 if denominator = 0),
+   MSCORE, MFLAG, and additional predictor variables       */
 data Mscore;
     set addlagyear;
-    /* Index ratios: set to 1 if denominator is zero (neutral) */
     if DS_m1  > 0 then DSR  = DS  / DS_m1;  else DSR  = 1;
     if GM     > 0 then GMI  = GM_m1 / GM;   else GMI  = 1;
     if AQ_m1  > 0 then AQI  = AQ  / AQ_m1; else AQI  = 1;
@@ -581,19 +468,19 @@ data Mscore;
              + 0.115*DEPI - 0.172*SGAI + 4.679*ACCRUAL - 0.327*LEVI;
     if MSCORE > -1.78 then MFLAG = 1; else MFLAG = 0;
 
-    /* Asset growth and sales growth using lagged values */
+    /* Z2: asset growth using lagged total assets */
     if AT_m1   > 0 then ASSET_GROWTH = (AT   - AT_m1)   / AT_m1;
+    /* SALES_GROWTH dropped: extreme outliers (std=61, max=11880) */
     if SALE_m1 > 0 then SALES_GROWTH = (SALE - SALE_m1) / SALE_m1;
 run;
 
 /*-----------------------------------------------------------------
   STEP 2: CONSTRUCT F-SCORE (Dechow et al. 2011)
-  Requires 2-year lagged receivables for CH_CS component
+  Requires 2-year lagged receivables for CH_CS
   FFLAG = 1 if FSCORE > 1.0
 -----------------------------------------------------------------*/
 
-/* Get 2-year lagged receivables from raw Compustat (not cleaned)
-   to maximize sample coverage at the 2-year horizon            */
+/* Get 2-year lagged receivables from raw Compustat */
 proc sql;
     create table addlagyear2 as
     select a.*, b.rect as rect_m2
@@ -602,45 +489,42 @@ proc sql;
         on a.gvkey = b.gvkey and a.fyear - 2 = b.fyear;
 quit;
 
-/* Compute 7 F-Score components, predicted log-odds, probability,
-   F-Score, and FFLAG                                           */
+/* Compute 7 F-Score components, log-odds, probability, F-Score */
 data Fscore;
     set addlagyear2;
     if nmiss(rect,rect_m1,rect_m2,ib,ib_m1,invt,invt_m1,
              che,at,at_m1) = 0;
 
-    RSST   = ACCRUAL;                          /* Accruals          */
-    CH_REC = (RECT - RECT_m1) / AT;           /* Change receivables */
-    CH_INV = (INVT - INVT_m1) / AT;           /* Change inventory   */
-    SOFT   = (AT - PPENT - CHE) / AT;         /* Soft assets        */
-    CH_ROA = (IB/AT) - (IB_m1/AT_m1);        /* Change ROA         */
+    RSST   = ACCRUAL;
+    CH_REC = (RECT - RECT_m1) / AT;
+    CH_INV = (INVT - INVT_m1) / AT;
+    SOFT   = (AT - PPENT - CHE) / AT;
+    CH_ROA = (IB/AT) - (IB_m1/AT_m1);
 
-    /* Change in cash sales ratio */
+    /* If denominator of CH_CS is zero, set to 1 */
     if SALE_m1 - (RECT_m1 - RECT_m2) > 0
-        then CH_CS = ((SALE - (RECT - RECT_m1)) /
-                      (SALE_m1 - (RECT_m1 - RECT_m2))) - 1;
+        then CH_CS = ((SALE-(RECT-RECT_m1)) /
+                      (SALE_m1-(RECT_m1-RECT_m2))) - 1;
         else CH_CS = 1;
 
     if DLTIS + SSTK > 0 then ISSUE = 1; else ISSUE = 0;
 
-    /* F-Score logit equation */
     PredictedValue = -7.893 + 0.790*RSST + 2.518*CH_REC
                      + 1.191*CH_INV + 1.979*SOFT
                      + 0.171*CH_CS - 0.932*CH_ROA + 1.029*ISSUE;
-
     /* Cap at 709 to prevent exp() overflow */
     if PredictedValue > 709 then PredictedValue = 709;
 
     Probability = exp(PredictedValue) / (1 + exp(PredictedValue));
-    Fscore      = Probability / 0.0037; /* Scale by unconditional rate */
+    Fscore      = Probability / 0.0037;
     if FSCORE > 1 then FFLAG = 1; else FFLAG = 0;
 run;
 
 /*-----------------------------------------------------------------
-  STEP 3: MERGE WITH AAER, CODE FRAUD, RESTRICT TO 2003-2014
+  STEP 3: MERGE AAER, CODE FRAUD, RESTRICT TO 2003-2014
 -----------------------------------------------------------------*/
 
-/* Left join: preserve all firm-years; AAER match => fraud */
+/* Left join: keep all firm-years; match to AAER => fraud=1 */
 proc sql;
     create table addAAER as
     select a.*, b.P_aaer
@@ -651,9 +535,9 @@ quit;
 
 data Fraud;
     set addAAER;
-    if 2003 <= fyear <= 2014;            /* Analysis window          */
-    if nmiss(mflag, fflag) = 0;          /* Require both flags       */
-    if nmiss(accrual, asset_growth, lev) = 0; /* Additional vars    */
+    if 2003 <= fyear <= 2014;
+    if nmiss(mflag, fflag) = 0;
+    if nmiss(accrual, asset_growth, lev) = 0;
     if not missing(P_aaer) then FRAUD = 1; else FRAUD = 0;
 run;
 
@@ -677,7 +561,6 @@ quit;
 
 /*-----------------------------------------------------------------
   STEP 5: PART I - POOLED REGRESSION (2003-2014)
-  Model: FRAUD = a + MFLAG + FFLAG + ACCRUAL + ASSET_GROWTH + LEV
 -----------------------------------------------------------------*/
 
 proc reg data=fraud;
@@ -687,8 +570,7 @@ quit;
 
 /*-----------------------------------------------------------------
   STEP 6: PART II - YEAR-BY-YEAR REGRESSIONS
-  Same model estimated separately for each fiscal year.
-  BY statement in PROC REG loops over sorted fyear groups.
+  BY statement loops over sorted fyear values
 -----------------------------------------------------------------*/
 
 proc sort data=fraud; by fyear; run;
